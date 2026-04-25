@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>айКлик — Разработка приложений в Санкт-Петербурге</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}</style>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+    <div id="root"></div>
+    <script type="text/babel">
+        const {useState,useEffect}=React;
+
+        const Ico=({d,s=24,cn=""})=>(
+            <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={cn}>
+                {d.includes('|')?d.split('|').map((p,i)=><path key={i} d={p}/>):<path d={d}/>}
+            </svg>
+        );
+
+        const ic={
+            layers:"M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+            arrow:"M5 12h14M12 5l7 7-7 7",
+            play:"M10 8l6 4-6 4V8z|circle cx=12 cy=12 r=10",
+            check:"M20 6L9 17l-5-5",
+            spark:"M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z",
+            brain:"M12 5a3 3 0 0 0-3 3v.5a.5.5 0 0 1-.5.5 3 3 0 0 0 0 6h.5a.5.5 0 0 1 .5.5v.5a3 3 0 0 0 6 0v-.5a.5.5 0 0 1 .5-.5h.5a3 3 0 0 0 0-6h-.5a.5.5 0 0 1-.5-.5V8a3 3 0 0 0-3-3z|path d=M12 18v2 M8 21h8",
+            zap:"M13 2L3 14h9l-1 8 10-12h-9l1-8z",
+            phone:"M5 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z|line x1=12 y1=18 x2=12 y2=18",
+            cpu:"M4 4h16v16H4z|M9 9h6v6H9z|M9 1v3|M15 1v3|M9 20v3|M15 20v3|M20 9h3|M20 15h3|M1 9h3|M1 15h3",
+            msg:"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
+            ig:"M2 2h20v20H2z|M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z|line x1=17.5 y1=6.5 x2=17.51 y2=6.5",
+            in:"M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z|rect x=2 y=9 width=4 height=12|circle cx=4 cy=4 r=2",
+            gh:"M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22",
+            mail:"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z|polyline points=22,6 12,13 2,6",
+            mapPin:"M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z|circle cx=12 cy=10 r=3"
+        };
+
+        const Nav=()=>{
+            const [sc,setSc]=useState(false);
+            useEffect(()=>{const h=()=>setSc(window.scrollY>50);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h)},[]);
+            return(
+                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all ${sc?'bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-sm':'bg-transparent'}`}>
+                    <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+                        <a href="#" className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center text-white">
+                                <Ico d={ic.layers} s={18}/>
+                            </div>
+                            <span className="font-semibold text-lg tracking-tight">айКлик</span>
+                        </a>
+                        <div className="hidden md:flex gap-8 text-sm font-medium text-gray-500">
+                            <a href="#services" className="hover:text-gray-900 transition-colors">Услуги</a>
+                            <a href="#ai" className="hover:text-gray-900 transition-colors">Apple Intelligence</a>
+                            <a href="#process" className="hover:text-gray-900 transition-colors">Процесс</a>
+                        </div>
+                        <a href="#contact" className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-500 transition-all">Начать проект</a>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Mockup=()=>{
+            const [time,setTime]=useState(new Date());
+            const [weather,setWeather]=useState({temp:18,desc:'Облачно',code:3});
+            const [city,setCity]=useState('Санкт-Петербург');
+
+            useEffect(()=>{
+                const t=setInterval(()=>setTime(new Date()),1000);
+                return()=>clearInterval(t);
+            },[]);
+
+            useEffect(()=>{
+                const fetchWeather=async(lat=59.9343,lon=30.3351,name='Санкт-Петербург')=>{
+                    try{
+                        const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                        const data=await res.json();
+                        const w=data.current_weather;
+                        const codes={0:'Солнечно',1:'Ясно',2:'Облачно',3:'Пасмурно',45:'Туман',48:'Туман',51:'Морось',53:'Морось',55:'Морось',61:'Дождь',63:'Дождь',65:'Дождь',71:'Снег',73:'Снег',75:'Снег',95:'Гроза',96:'Гроза',99:'Гроза'};
+                        setWeather({temp:Math.round(w.temperature),desc:codes[w.weathercode]||'Ясно',code:w.weathercode});
+                        setCity(name);
+                    }catch(e){setWeather({temp:18,desc:'Облачно',code:3});}
+                };
+                if(navigator.geolocation){
+                    navigator.geolocation.getCurrentPosition(
+                        pos=>fetchWeather(pos.coords.latitude,pos.coords.longitude,'Ваш город'),
+                        ()=>fetchWeather(),
+                        {timeout:5000}
+                    );
+                }else fetchWeather();
+            },[]);
+
+            const dateStr=time.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+            const timeStr=time.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+            const wcol=weather.code<=1?'from-yellow-400 to-orange-400':weather.code>=51&&weather.code<=65?'from-blue-400 to-gray-400':weather.code>=71&&weather.code<=75?'from-blue-100 to-white':'from-gray-400 to-gray-500';
+
+            return(
+                <div className="flex justify-center items-center py-6">
+                    <div className="relative">
+                        <div className="absolute -inset-6 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-[60px] blur-2xl"></div>
+                        
+                        {/* iPhone 17 Pro — тёмная рамка */}
+                        <div className="relative w-[260px] h-[530px] bg-gradient-to-b from-[#2a2a2c] via-[#1c1c1e] to-[#121214] rounded-[44px] p-[10px] shadow-2xl border border-white/5">
+                            <div className="absolute -left-[3px] top-20 w-[3px] h-14 bg-gradient-to-r from-[#3a3a3c] to-[#1c1c1e] rounded-l-md"></div>
+                            <div className="absolute -left-[3px] top-36 w-[3px] h-9 bg-gradient-to-r from-[#3a3a3c] to-[#1c1c1e] rounded-l-md"></div>
+                            <div className="absolute -right-[3px] top-28 w-[3px] h-16 bg-gradient-to-l from-[#3a3a3c] to-[#1c1c1e] rounded-r-md"></div>
+                            
+                            <div className="w-full h-full bg-black rounded-[36px] relative overflow-hidden">
+                                {/* Dynamic Island */}
+                                <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-[90px] h-[26px] bg-black rounded-full z-50 flex items-center justify-center gap-1">
+                                    <div className="w-[7px] h-[7px] rounded-full bg-gradient-to-br from-blue-900 to-black"></div>
+                                </div>
+                                
+                                {/* Status Bar */}
+                                <div className="absolute top-0 left-0 right-0 flex justify-between px-5 pt-[7px] text-white text-[9px] font-medium z-40">
+                                    <span>{timeStr}</span>
+                                    <div className="flex items-center gap-1">
+                                        <span className="text-[8px]">5G</span>
+                                        <div className="w-4 h-2 border border-white/30 rounded-[2px] relative">
+                                            <div className="absolute inset-[1px] bg-white w-[70%] rounded-[1px]"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Wallpaper */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"></div>
+                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(120,58,220,0.35)_0%,_transparent_60%)]"></div>
+                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(30,100,200,0.3)_0%,_transparent_60%)]"></div>
+                                
+                                {/* Контент — компактный */}
+                                <div className="relative z-30 h-full flex flex-col px-4 pt-10 pb-5">
+                                    {/* Время */}
+                                    <div className="bg-white/[0.07] backdrop-blur-md border border-white/[0.08] rounded-[22px] p-3 mb-2">
+                                        <div className="text-white/40 text-[9px] uppercase tracking-wider mb-0.5">{dateStr}</div>
+                                        <div className="text-white text-[32px] font-light leading-none tracking-tight">{timeStr}</div>
+                                        <div className="mt-1.5 flex items-center gap-1.5">
+                                            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center">
+                                                <Ico d={ic.spark} s={8} cn="text-white"/>
+                                            </div>
+                                            <span className="text-white/50 text-[9px]">Apple Intelligence</span>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* AI */}
+                                    <div className="bg-white/[0.07] backdrop-blur-md border border-white/[0.08] rounded-[22px] p-3 mb-2 shadow-lg shadow-indigo-500/10">
+                                        <div className="flex items-center gap-2 mb-1.5">
+                                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                                                <Ico d={ic.brain} s={16} cn="text-white"/>
+                                            </div>
+                                            <div>
+                                                <div className="text-white text-xs font-semibold leading-tight">Siri Pro</div>
+                                                <div className="text-white/30 text-[8px]">On-Device ИИ</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-black/20 rounded-xl p-2">
+                                            <p className="text-white/40 text-[9px] leading-relaxed">"Создай приложение с ИИ-аналитикой..."</p>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Погода */}
+                                    <div className="bg-white/[0.07] backdrop-blur-md border border-white/[0.08] rounded-[22px] p-3 mb-2 flex justify-between items-center">
+                                        <div>
+                                            <div className="text-white/40 text-[8px] uppercase">{city}</div>
+                                            <div className="text-white text-xl font-light">{weather.temp}°</div>
+                                            <div className="text-white/50 text-[9px]">{weather.desc}</div>
+                                        </div>
+                                        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${wcol}`}></div>
+                                    </div>
+                                    
+                                    {/* Приложения */}
+                                    <div className="grid grid-cols-4 gap-2 mt-auto mb-3">
+                                        {[
+                                            {g:'from-blue-500 to-blue-600',ic:ic.msg},
+                                            {g:'from-green-500 to-emerald-600',ic:ic.zap},
+                                            {g:'from-indigo-500 to-purple-600',ic:ic.phone},
+                                            {g:'from-orange-500 to-pink-500',ic:ic.cpu},
+                                        ].map((a,j)=>(
+                                            <div key={j} className="flex flex-col items-center gap-0.5">
+                                                <div className={`w-11 h-11 rounded-[12px] bg-gradient-to-br ${a.g} flex items-center justify-center shadow-md`}>
+                                                    <Ico d={a.ic} s={16} cn="text-white"/>
+                                                </div>
+                                                <span className="text-white/50 text-[7px]">{['Messages','Shortcuts','App Store','Core ML'][j]}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    
+                                    {/* Dock */}
+                                    <div className="bg-white/10 backdrop-blur-xl rounded-[24px] p-1.5 flex justify-around border border-white/[0.06]">
+                                        {['from-green-400 to-green-500','from-blue-400 to-blue-500','from-gray-700 to-gray-800','from-pink-400 to-orange-400'].map((g,k)=>(
+                                            <div key={k} className={`w-9 h-9 rounded-[11px] bg-gradient-to-br ${g} flex items-center justify-center shadow-sm`}>
+                                                <div className="w-2.5 h-2.5 bg-white/30 rounded-full"></div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/70 rounded-full z-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Hero=()=>(
+            <section className="pt-32 md:pt-44 pb-20 px-6">
+                <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+                            <Ico d={ic.spark} s={14}/>
+                            <span>Санкт-Петербург</span>
+                        </div>
+                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05] mb-6">
+                            айКлик<br/>
+                            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent">iOS 26</span><br/>
+                            с Apple Intelligence
+                        </h1>
+                        <p className="text-xl text-gray-500 leading-relaxed mb-8 max-w-lg">
+                            Разрабатываем нативные приложения с интеграцией ИИ в Санкт-Петербурге. 
+                            On-device нейросети, генеративные модели и персонализированный ML.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <a href="#contact" className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/20">
+                                Получить ТЗ бесплатно
+                                <Ico d={ic.arrow} s={20}/>
+                            </a>
+                            <button className="inline-flex items-center justify-center gap-2 text-blue-600 px-8 py-4 rounded-full text-lg font-medium hover:bg-blue-50 transition-colors">
+                                <Ico d={ic.play} s={20}/>
+                                Смотреть кейсы
+                            </button>
+                        </div>
+                    </div>
+                    <Mockup/>
+                </div>
+            </section>
+        );
+
+        const Bento=()=>{
+            const cards=[
+                {t:"iOS Разработка",st:"SwiftUI & UIKit",d:"Нативные приложения с плавными анимациями ProMotion 120Hz и идеальной оптимизацией под всю экосистему Apple.",img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop&q=80",cls:"md:col-span-2 bg-gray-100",dark:false},
+                {t:"UI/UX Дизайн",st:"Human Interface",d:"Дизайн, который чувствуется интуитивно. Микровзаимодействия и визуальная иерархия уровня Apple.",img:"https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&auto=format&fit=crop&q=80",cls:"md:col-span-1 bg-gray-900 text-white",dark:true},
+                {t:"Android",st:"Kotlin & Compose",d:"Современная разработка с Material You и адаптивным дизайном под все форм-факторы.",img:"https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=800&auto=format&fit=crop&q=80",cls:"md:col-span-1 bg-gray-100",dark:false},
+                {t:"Backend & Cloud",st:"Масштабируемость",d:"Облачная инфраструктура, безопасность данных и API, готовые к миллионам пользователей.",img:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=80",cls:"md:col-span-2 bg-gradient-to-br from-gray-900 to-black text-white",dark:true}
+            ];
+            return(
+                <section id="services" className="py-24 bg-gray-100 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">Что мы создаем</h2>
+                            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Полный цикл разработки от концепции до публикации в App Store</p>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {cards.map((c,j)=>(
+                                <div key={j} className={`${c.cls} rounded-[32px] p-8 md:p-10 flex flex-col justify-between min-h-[520px] transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl cursor-pointer`}>
+                                    <div>
+                                        <div className={`text-xs font-semibold uppercase tracking-wider mb-2 ${c.dark?'text-white/50':'text-gray-500'}`}>{c.st}</div>
+                                        <h3 className={`text-3xl font-semibold mb-3 ${c.dark?'text-white':'text-gray-900'}`}>{c.t}</h3>
+                                        <p className={`text-lg leading-relaxed ${c.dark?'text-white/60':'text-gray-500'}`}>{c.d}</p>
+                                    </div>
+                                    <div className="mt-8 relative overflow-hidden rounded-2xl flex-1 min-h-[220px]">
+                                        <img src={c.img} alt={c.t} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"/>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Process=()=>{
+            const steps=[
+                {n:"01",t:"Исследование",d:"Анализ рынка, конкурентов и пользовательских сценариев с применением ИИ-аналитики"},
+                {n:"02",t:"Прототип",d:"Интерактивные макеты с тестированием гипотез на реальных пользователях"},
+                {n:"03",t:"Разработка",d:"Agile-процесс с двухнедельными спринтами и интеграцией Apple Intelligence"},
+                {n:"04",t:"Запуск",d:"Публикация, ASO-оптимизация с ИИ и поддержка после релиза"}
+            ];
+            return(
+                <section id="process" className="py-24 px-6 bg-white">
+                    <div className="max-w-5xl mx-auto">
+                        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-center mb-16">Процесс работы</h2>
+                        <div className="space-y-8">
+                            {steps.map((s,j)=>(
+                                <div key={j} className="flex gap-6 md:gap-10 items-start group">
+                                    <div className="text-4xl md:text-5xl font-semibold text-gray-200 group-hover:text-blue-600 transition-colors w-20 shrink-0">{s.n}</div>
+                                    <div className="flex-1 pb-8 border-b border-gray-100 group-hover:border-gray-200 transition-colors">
+                                        <h3 className="text-2xl font-semibold mb-2">{s.t}</h3>
+                                        <p className="text-lg text-gray-500 leading-relaxed">{s.d}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const AI=()=>{
+            const f=[
+                {t:"Apple Intelligence",d:"Интеграция on-device нейросетей. Ваше приложение использует Neural Engine iPhone 17 для мгновенной обработки данных без отправки в облако.",ic:ic.brain,co:"from-indigo-500 to-purple-500"},
+                {t:"GenAI SDK",d:"Встраиваем генеративный ИИ прямо в интерфейс: создание контента, умные подсказки, автоматические ответы и персонализация в реальном времени.",ic:ic.spark,co:"from-orange-500 to-pink-500"},
+                {t:"Core ML 7",d:"Модели машинного обучения оптимизированы под A19 Pro. Распознавание изображений, NLP, прогнозирование поведения пользователя.",ic:ic.cpu,co:"from-blue-500 to-green-500"}
+            ];
+            return(
+                <section id="ai" className="py-24 bg-gray-100 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">Apple Intelligence внутри</h2>
+                            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Ваше приложение получает преимущество нейросетей iPhone 17 и iOS 26</p>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {f.map((a,j)=>(
+                                <div key={j} className="bg-white rounded-[32px] p-8 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
+                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${a.co} flex items-center justify-center mb-6 shadow-lg`}>
+                                        <Ico d={a.ic} s={28} cn="text-white"/>
+                                    </div>
+                                    <h3 className="text-2xl font-semibold mb-3">{a.t}</h3>
+                                    <p className="text-gray-500 leading-relaxed">{a.d}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Contact=()=>{
+            const [fd,setFd]=useState({name:"",phone:""});
+            const [load,setLoad]=useState(false);
+            const [ok,setOk]=useState(false);
+
+            const hp=(e)=>{
+                let v=e.target.value.replace(/\D/g,"");
+                if(v.length>0){if(v[0]==="7"||v[0]==="8")v=v.substring(1);let f="+7";if(v.length>0)f+=" ("+v.substring(0,3);if(v.length>=3)f+=") "+v.substring(3,6);if(v.length>=6)f+="-"+v.substring(6,8);if(v.length>=8)f+="-"+v.substring(8,10);setFd({...fd,phone:f});}
+                else setFd({...fd,phone:""});
+            };
+
+            const sub=(e)=>{e.preventDefault();setLoad(true);setTimeout(()=>{setLoad(false);setOk(true);},1500);};
+
+            return(
+                <section id="contact" className="py-24 md:py-32 bg-black text-white relative overflow-hidden">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+                    <div className="max-w-xl mx-auto px-6 relative z-10 text-center">
+                        <div className="inline-block text-indigo-400 text-sm font-semibold tracking-wider uppercase mb-4">Начать проект</div>
+                        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">Готовы к iOS 26?</h2>
+                        <p className="text-xl text-gray-400 mb-12">Получите ТЗ с интеграцией Apple Intelligence бесплатно</p>
+                        {ok?(
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-12">
+                                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Ico d={ic.check} s={32} cn="text-white"/>
+                                </div>
+                                <h3 className="text-2xl font-semibold mb-2">Заявка отправлена</h3>
+                                <p className="text-gray-400">Обсудим ИИ-возможности для вашего приложения</p>
+                                <button onClick={()=>{setOk(false);setFd({name:"",phone:""});}} className="mt-6 text-indigo-400 hover:underline">Отправить еще</button>
+                            </div>
+                        ):(
+                            <form onSubmit={sub} className="space-y-4 text-left">
+                                <div>
+                                    <label className="text-sm font-medium text-gray-300 ml-1 block mb-2">Ваше имя</label>
+                                    <input type="text" required value={fd.name} onChange={e=>setFd({...fd,name:e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 transition-all" placeholder="Иван Иванов"/>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-medium text-gray-300 ml-1 block mb-2">Телефон</label>
+                                    <input type="tel" required value={fd.phone} onChange={hp} className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 transition-all" placeholder="+7 (999) 999-99-99"/>
+                                </div>
+                                <button type="submit" disabled={load} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-lg py-4 rounded-2xl mt-6 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2">
+                                    {load?(<><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>Отправка...</>):(<>Получить ТЗ Бесплатно<Ico d={ic.arrow} s={20}/></>)}
+                                </button>
+                                <p className="text-xs text-center text-gray-600 mt-4">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+                            </form>
+                        )}
+                    </div>
+                </section>
+            );
+        };
+
+        const Footer=()=>(
+            <footer className="bg-gray-100 py-12 px-6 text-xs text-gray-500">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-4 gap-8 mb-8">
+                        <div>
+                            <div className="flex items-center gap-2 mb-4 text-gray-900 font-semibold text-sm">
+                                <Ico d={ic.layers} s={18}/>
+                                айКлик
+                            </div>
+                            <p className="leading-relaxed">Разработка приложений с Apple Intelligence в Санкт-Петербурге.</p>
+                            <div className="flex items-center gap-1.5 mt-3 text-gray-400">
+                                <Ico d={ic.mapPin} s={12}/>
+                                <span>Санкт-Петербург</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Технологии</h4>
+                            <ul className="space-y-2">
+                                <li><a href="#" className="hover:text-gray-900">iOS 26</a></li>
+                                <li><a href="#" className="hover:text-gray-900">Apple Intelligence</a></li>
+                                <li><a href="#" className="hover:text-gray-900">Core ML</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Компания</h4>
+                            <ul className="space-y-2">
+                                <li><a href="#" className="hover:text-gray-900">О нас</a></li>
+                                <li><a href="#" className="hover:text-gray-900">Кейсы</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-3">Контакты</h4>
+                            <ul className="space-y-2">
+                                <li className="flex items-center gap-1.5"><Ico d={ic.mail} s={12}/> hello@iclick.ru</li>
+                                <li className="flex gap-3 mt-3">
+                                    <a href="#" className="hover:text-gray-900"><Ico d={ic.ig} s={16}/></a>
+                                    <a href="#" className="hover:text-gray-900"><Ico d={ic.in} s={16}/></a>
+                                    <a href="#" className="hover:text-gray-900"><Ico d={ic.gh} s={16}/></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="h-px bg-gray-300 my-6"></div>
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p>© 2026 айКлик. Все права защищены.</p>
+                        <div className="flex gap-6">
+                            <a href="#" className="hover:text-gray-900">Политика конфиденциальности</a>
+                            <a href="#" className="hover:text-gray-900">Условия использования</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const App=()=>(
+            <div className="min-h-screen bg-white">
+                <Nav/>
+                <main>
+                    <Hero/>
+                    <Bento/>
+                    <Process/>
+                    <AI/>
+                    <Contact/>
+                </main>
+                <Footer/>
+            </div>
+        );
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    </script>
+</body>
+</html>
